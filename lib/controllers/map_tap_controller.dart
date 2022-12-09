@@ -3,20 +3,21 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as latLng;
 import 'package:map_tap/services/location_service.dart';
+import 'package:map_tap/services/maps_service.dart';
 
 class MapTapController extends ChangeNotifier {
   late MapController _mapController;
-  late MapOptions _mapOptions = MapOptions();
 
   Position? _currentLocation;
   late DetermineLocation location;
   bool _isLoading = true;
 
+  String _addressFromPoint = "";
+
   MapTapController() {
     location = DetermineLocation();
     locateUser();
     _mapController = MapController();
-    updateMapOptions();
   }
 
   Future<void> locateUser() async {
@@ -34,21 +35,16 @@ class MapTapController extends ChangeNotifier {
     }
   }
 
-  void updateMapOptions() {
-    _mapOptions = MapOptions(
-      zoom: 9.2,
-      center: latLng.LatLng(28.704060, 77.102493),
-      onTap: (tapPosition, point) {
-        print(point);
-      },
-    );
+  Future updateMapOptions(latLng.LatLng point) async {
+    _addressFromPoint = await MapService.fetchAddressFromPoint(point);
+    notifyListeners();
   }
 
   MapController get mapController => _mapController;
 
-  MapOptions get mapOptions => _mapOptions;
-
   bool get isLoading => _isLoading;
 
   Position? get currentLocation => _currentLocation;
+
+  String get addressFromPoint => _addressFromPoint;
 }
