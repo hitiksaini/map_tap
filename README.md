@@ -1,6 +1,6 @@
-# map_tap
+## Flutter Maps
 
-A new Flutter project.
+A minimal usage of flutter_maps.
 
 ## Getting Started
 
